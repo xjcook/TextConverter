@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Text Converter</string>
+    <string name="choose_file">Choose a file...</string>
+    <string name="preview">...preview...</string>
+    <string name="save_as">Save As...</string>
+    <string name="action_settings">Settings</string>
+</resources>
