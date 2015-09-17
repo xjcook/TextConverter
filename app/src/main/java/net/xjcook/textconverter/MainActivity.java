@@ -1,16 +1,22 @@
 package net.xjcook.textconverter;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import java.nio.charset.Charset;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int READ_REQUEST_CODE = 42;
+    private static final int WRITE_REQUEST_CODE = 43;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +37,30 @@ public class MainActivity extends AppCompatActivity {
 
         inEncodingSpn.setSelection(spinAdapter.getPosition("windows-1250"));
         outEncodingSpn.setSelection(spinAdapter.getPosition("UTF-8"));
+
+        // Set buttons
+        Button inFileBtn = (Button) findViewById(R.id.inFileBtn);
+        Button outFileBtn = (Button) findViewById(R.id.outFileBtn);
+
+        inFileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("text/plain");
+                startActivityForResult(intent, READ_REQUEST_CODE);
+            }
+        });
+
+        outFileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("text/plain");
+                startActivityForResult(intent, WRITE_REQUEST_CODE);
+            }
+        });
     }
 
     @Override
