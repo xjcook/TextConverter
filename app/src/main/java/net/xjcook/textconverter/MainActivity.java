@@ -2,7 +2,9 @@ package net.xjcook.textconverter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.provider.OpenableColumns;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private Spinner inEncodingSpn;
     private Spinner outEncodingSpn;
 
+    private Button inFileBtn;
+    private Button outFileBtn;
+
     private EditText previewText;
 
     private Uri inUri;
@@ -66,8 +71,8 @@ public class MainActivity extends AppCompatActivity {
         outEncodingSpn.setSelection(spinAdapter.getPosition("UTF-8"));
 
         // Set buttons
-        Button inFileBtn = (Button) findViewById(R.id.inFileBtn);
-        Button outFileBtn = (Button) findViewById(R.id.outFileBtn);
+        inFileBtn = (Button) findViewById(R.id.inFileBtn);
+        outFileBtn = (Button) findViewById(R.id.outFileBtn);
 
         inFileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 String inCharset = (String) inEncodingSpn.getSelectedItem();
 
                 try {
+                    inFileBtn.setText(getFileNameFromUri(inUri));
                     previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
@@ -134,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 String outCharset = (String) outEncodingSpn.getSelectedItem();
 
                 try {
+                    outFileBtn.setText(getFileNameFromUri(outUri));
                     convertText(inUri, inCharset, outUri, outCharset);
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
@@ -179,5 +186,20 @@ public class MainActivity extends AppCompatActivity {
         reader.close();
         outputStream.close();
         inputStream.close();
+    }
+
+    private String getFileNameFromUri(Uri uri) {
+        String fileName = null;
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null, null);
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            }
+        } finally {
+            cursor.close();
+        }
+
+        return fileName;
     }
 }
