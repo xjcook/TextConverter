@@ -15,7 +15,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MainActivity";
 
     private static final int BUFFER_SIZE = 8192;
+    private static final int PREVIEW_LINES = 10;
+
     private static final int READ_REQUEST_CODE = 42;
     private static final int WRITE_REQUEST_CODE = 43;
 
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 String inCharset = (String) inEncodingSpn.getSelectedItem();
 
                 try {
-                    previewText.setText(readTextFromUri(inUri, inCharset));
+                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
                 }
@@ -141,29 +142,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private String readTextFromUri(Uri uri, String charset) throws IOException {
+    private String readTextFromUri(Uri uri, String charset, int maxLines) throws IOException {
         InputStream inputStream = getContentResolver().openInputStream(uri);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));
 
         StringBuilder stringBuilder = new StringBuilder();
         String line;
+        int current = 0;
         while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
+            if (current < maxLines) {
+                stringBuilder.append(line);
+                stringBuilder.append(System.getProperty("line.separator"));
+                current++;
+            }
         }
 
         inputStream.close();
         reader.close();
         return stringBuilder.toString();
-    }
-
-    private void writeTextToUri(Uri uri, String charset, String buffer) throws IOException {
-        OutputStream outputStream = getContentResolver().openOutputStream(uri);
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset));
-
-        writer.write(buffer);
-
-        outputStream.close();
-        writer.close();
     }
 
     private void convertText(Uri inUri, String inCharset, Uri outUri, String outCharset) throws IOException {
