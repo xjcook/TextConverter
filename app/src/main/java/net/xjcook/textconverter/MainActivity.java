@@ -21,6 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
+    private static final int BUFFER_SIZE = 8192;
     private static final int READ_REQUEST_CODE = 42;
     private static final int WRITE_REQUEST_CODE = 43;
 
@@ -36,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText previewText;
 
-    private String buffer;
+    private Uri inUri;
+    private Uri outUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +115,11 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
-                Uri uri = resultData.getData();
-                String charset = (String) inEncodingSpn.getSelectedItem();
-                Log.i(TAG, "Uri: " + uri.toString() + " Charset: " + charset);
+                inUri = resultData.getData();
+                String inCharset = (String) inEncodingSpn.getSelectedItem();
 
                 try {
-                    buffer = readTextFromUri(uri, charset);
-                    previewText.setText(buffer);
+                    previewText.setText(readTextFromUri(inUri, inCharset));
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
                 }
@@ -126,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             if (resultData != null) {
-                Uri uri = resultData.getData();
-                String charset = (String) outEncodingSpn.getSelectedItem();
-                Log.i(TAG, "Uri: " + uri.toString() + " Charset: " + charset);
+                outUri = resultData.getData();
+                String inCharset = (String) inEncodingSpn.getSelectedItem();
+                String outCharset = (String) outEncodingSpn.getSelectedItem();
 
                 try {
-                    writeTextToUri(uri, charset, buffer);
+                    convertText(inUri, inCharset, outUri, outCharset);
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
                 }
@@ -162,5 +164,24 @@ public class MainActivity extends AppCompatActivity {
 
         outputStream.close();
         writer.close();
+    }
+
+    private void convertText(Uri inUri, String inCharset, Uri outUri, String outCharset) throws IOException {
+        InputStream inputStream = getContentResolver().openInputStream(inUri);
+        OutputStream outputStream = getContentResolver().openOutputStream(outUri);
+
+        Reader reader = new InputStreamReader(inputStream, inCharset);
+        Writer writer = new OutputStreamWriter(outputStream, outCharset);
+
+        char[] buffer = new char[BUFFER_SIZE];
+        int read;
+        while ((read = reader.read(buffer)) != -1) {
+            writer.write(buffer, 0, read);
+        }
+
+        writer.close();
+        reader.close();
+        outputStream.close();
+        inputStream.close();
     }
 }

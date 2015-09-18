@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:text="@string/preview"
         android:minLines="3"
+        android:maxLines="10"
         android:editable="false" />
 
     <Spinner android:id="@+id/outEncodingSpn"
