@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
+                intent.putExtra(Intent.EXTRA_TITLE, "enc_" + inFileBtn.getText());
                 startActivityForResult(intent, WRITE_REQUEST_CODE);
             }
         });
