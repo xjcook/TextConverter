@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,18 +32,18 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
-    private static final int BUFFER_SIZE = 8192;
-    private static final int PREVIEW_LINES = 10;
+    private static final String DEFAULT_IN_ENCODING = "windows-1250";
+    private static final String DEFAULT_OUT_ENCODING = "UTF-8";
 
+    private static final int BUFFER_SIZE = 8192;
+    private static final int PREVIEW_LINES = 20;
     private static final int READ_REQUEST_CODE = 42;
     private static final int WRITE_REQUEST_CODE = 43;
 
     private Spinner inEncodingSpn;
     private Spinner outEncodingSpn;
-
     private Button inFileBtn;
     private Button outFileBtn;
-
     private EditText previewText;
 
     private Uri inUri;
@@ -67,8 +68,8 @@ public class MainActivity extends AppCompatActivity {
         inEncodingSpn.setAdapter(spinAdapter);
         outEncodingSpn.setAdapter(spinAdapter);
 
-        inEncodingSpn.setSelection(spinAdapter.getPosition("windows-1250"));
-        outEncodingSpn.setSelection(spinAdapter.getPosition("UTF-8"));
+        inEncodingSpn.setSelection(spinAdapter.getPosition(DEFAULT_IN_ENCODING));
+        outEncodingSpn.setSelection(spinAdapter.getPosition(DEFAULT_OUT_ENCODING));
 
         // Set buttons
         inFileBtn = (Button) findViewById(R.id.inFileBtn);
@@ -87,11 +88,13 @@ public class MainActivity extends AppCompatActivity {
         outFileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                intent.putExtra(Intent.EXTRA_TITLE, "enc_" + inFileBtn.getText());
-                startActivityForResult(intent, WRITE_REQUEST_CODE);
+                if (inUri != null) {
+                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    intent.putExtra(Intent.EXTRA_TITLE, "enc_" + inFileBtn.getText());
+                    startActivityForResult(intent, WRITE_REQUEST_CODE);
+                }
             }
         });
     }
@@ -143,9 +146,12 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     outFileBtn.setText(getFileNameFromUri(outUri));
                     convertText(inUri, inCharset, outUri, outCharset);
+                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
                 } catch (IOException e) {
                     Log.getStackTraceString(e);
                 }
+
+                clean();
             }
         }
     }
@@ -202,5 +208,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return fileName;
+    }
+
+    private void clean() {
+        inUri = null;
+        outUri = null;
+        inFileBtn.setText(R.string.choose_file);
+        outFileBtn.setText(R.string.save_as);
+        previewText.setText(R.string.preview);
     }
 }

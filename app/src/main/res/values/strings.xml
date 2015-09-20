@@ -4,4 +4,6 @@
     <string name="preview">...preview...</string>
     <string name="save_as">Save As...</string>
     <string name="action_settings">Settings</string>
+
+    <string name="convert_success">File was successfully converted</string>
 </resources>
