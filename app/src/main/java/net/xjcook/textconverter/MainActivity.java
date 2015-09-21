@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String DEFAULT_OUT_ENCODING = "UTF-8";
 
     private static final int BUFFER_SIZE = 8192;
-    private static final int PREVIEW_LINES = 20;
+    private static final int PREVIEW_LINES = 25;
     private static final int READ_REQUEST_CODE = 42;
     private static final int WRITE_REQUEST_CODE = 43;
 
