@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        previewText = (TextView) findViewById(R.id.previewText);
 
         // Populate spinners
         inEncodingSpn = (Spinner) findViewById(R.id.inEncodingSpn);
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         String[] charsetNames = charsetMap.keySet().toArray(new String[charsetMap.size()]);
 
         ArrayAdapter spinAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, charsetNames);
-
         inEncodingSpn.setAdapter(spinAdapter);
         outEncodingSpn.setAdapter(spinAdapter);
 
@@ -100,7 +100,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        previewText = (TextView) findViewById(R.id.previewText);
+        // Handle screen rotation
+        if (savedInstanceState != null) {
+            inUri = savedInstanceState.getParcelable("inUri");
+            outUri = savedInstanceState.getParcelable("outUri");
+            inFileBtn.setText(savedInstanceState.getString("inFileBtn"));
+            outFileBtn.setText(savedInstanceState.getString("outFileBtn"));
+            previewText.setText(savedInstanceState.getString("previewText"));
+        }
     }
 
     @Override
@@ -113,6 +120,17 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("outCharset", (String) outEncodingSpn.getSelectedItem());
 
         editor.commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("inUri", inUri);
+        outState.putParcelable("outUri", outUri);
+        outState.putString("inFileBtn", (String) inFileBtn.getText());
+        outState.putString("outFileBtn", (String) outFileBtn.getText());
+        outState.putString("previewText", (String) previewText.getText());
     }
 
     @Override
