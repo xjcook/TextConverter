@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -27,7 +28,7 @@ import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.Map;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "MainActivity";
 
