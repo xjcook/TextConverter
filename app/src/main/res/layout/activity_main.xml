@@ -15,10 +15,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView android:id="@+id/previewText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/preview" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        android:fillViewport="true" >
+
+        <TextView android:id="@+id/previewText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/preview" />
+
+    </ScrollView>
 
     <Spinner android:id="@+id/outEncodingSpn"
         android:layout_width="match_parent"
