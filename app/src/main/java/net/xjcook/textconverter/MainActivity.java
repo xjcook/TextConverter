@@ -2,6 +2,7 @@ package net.xjcook.textconverter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
@@ -30,8 +31,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String TAG = "MainActivity";
-
+    private static final String PREFS_NAME = "TextConverterPrefs";
     private static final String DEFAULT_IN_ENCODING = "windows-1250";
     private static final String DEFAULT_OUT_ENCODING = "UTF-8";
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previewText = (TextView) findViewById(R.id.previewText);
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
 
         // Populate spinners
         inEncodingSpn = (Spinner) findViewById(R.id.inEncodingSpn);
@@ -68,8 +68,10 @@ public class MainActivity extends AppCompatActivity {
         inEncodingSpn.setAdapter(spinAdapter);
         outEncodingSpn.setAdapter(spinAdapter);
 
-        inEncodingSpn.setSelection(spinAdapter.getPosition(DEFAULT_IN_ENCODING));
-        outEncodingSpn.setSelection(spinAdapter.getPosition(DEFAULT_OUT_ENCODING));
+        inEncodingSpn.setSelection(
+                spinAdapter.getPosition(settings.getString("inCharset", DEFAULT_IN_ENCODING)));
+        outEncodingSpn.setSelection(
+                spinAdapter.getPosition(settings.getString("outCharset", DEFAULT_OUT_ENCODING)));
 
         // Set buttons
         inFileBtn = (Button) findViewById(R.id.inFileBtn);
@@ -97,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        previewText = (TextView) findViewById(R.id.previewText);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // Save preferences
+        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, 0).edit();
+        editor.putString("inCharset", (String) inEncodingSpn.getSelectedItem());
+        editor.putString("outCharset", (String) outEncodingSpn.getSelectedItem());
+
+        editor.commit();
     }
 
     @Override
