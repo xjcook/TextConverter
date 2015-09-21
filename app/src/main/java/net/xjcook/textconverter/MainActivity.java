@@ -12,8 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     private Spinner outEncodingSpn;
     private Button inFileBtn;
     private Button outFileBtn;
-    private EditText previewText;
+    private TextView previewText;
 
     private Uri inUri;
     private Uri outUri;
@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        previewText = (EditText) findViewById(R.id.previewText);
+        previewText = (TextView) findViewById(R.id.previewText);
 
         // Populate spinners
         inEncodingSpn = (Spinner) findViewById(R.id.inEncodingSpn);
