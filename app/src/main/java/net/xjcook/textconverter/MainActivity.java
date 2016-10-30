@@ -48,7 +48,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements
         PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
 
-    private static final String PREFS_NAME = "TextConverterPrefs";
+    public static final String PREFS_NAME = "TextConverterPrefs";
     private static final String DEFAULT_IN_ENCODING = "windows-1250";
     private static final String DEFAULT_OUT_ENCODING = "UTF-8";
 

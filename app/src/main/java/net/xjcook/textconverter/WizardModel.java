@@ -3,9 +3,10 @@ package net.xjcook.textconverter;
 import android.content.Context;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
-import com.tech.freak.wizardpager.model.MultipleFixedChoicePage;
 import com.tech.freak.wizardpager.model.PageList;
-import com.tech.freak.wizardpager.model.SingleFixedChoicePage;
+
+import net.xjcook.textconverter.pages.InputFilePage;
+import net.xjcook.textconverter.pages.OutputFilePage;
 
 public class WizardModel extends AbstractWizardModel {
     public WizardModel(Context context) {
@@ -14,12 +15,9 @@ public class WizardModel extends AbstractWizardModel {
 
     @Override
     protected PageList onNewRootPageList() {
-        return new PageList(new SingleFixedChoicePage(this, "Bread").setChoices("White",
-                "Wheat", "Rye", "Pretzel", "Ciabatta")
-                .setRequired(true),
-
-                new MultipleFixedChoicePage(this, "Meats").setChoices(
-                        "Pepperoni", "Turkey", "Ham", "Pastrami", "Roast Beef",
-                        "Bologna"));
+        return new PageList(
+                new InputFilePage(this, "Input file").setRequired(true),
+                new OutputFilePage(this, "Output file").setRequired(true)
+        );
     }
 }
