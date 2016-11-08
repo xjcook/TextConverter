@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class OutputFilePage extends Page {
     public static final String DEFAULT_ENCODING = "UTF-8";
     public static final String CHARSET_PREF_KEY = "outCharset";
+    public static final int REQUEST_CODE = 43;
 
     public static final String FILENAME_DATA_KEY = "filename";
     public static final String CHARSET_DATA_KEY = "charset";
@@ -25,7 +26,7 @@ public class OutputFilePage extends Page {
 
     @Override
     public Fragment createFragment() {
-        return ChooseFileFragment.create(getKey(), CHARSET_PREF_KEY, DEFAULT_ENCODING);
+        return ChooseFileFragment.create(getKey(), CHARSET_PREF_KEY, DEFAULT_ENCODING, REQUEST_CODE);
     }
 
     @Override

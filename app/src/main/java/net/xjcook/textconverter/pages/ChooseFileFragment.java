@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ import java.util.Map;
 import static net.xjcook.textconverter.MainActivity.PREFS_NAME;
 
 public class ChooseFileFragment extends Fragment {
+    private static final String LOG_TAG = "ChooseFileFragment";
+
     private static final String ARG_KEY = "key";
     private static final String ARG_CHARSET_PREF_KEY = "charsetPrefKey";
     private static final String ARG_DEFAULT_ENCODE = "defaultEncode";
@@ -39,11 +42,13 @@ public class ChooseFileFragment extends Fragment {
     private Spinner mSpinner;
     private Button mButton;
 
-    public static ChooseFileFragment create(String key, String prefKey, String defaultEncode) {
+    public static ChooseFileFragment create(String key, String prefKey, String defaultEncode,
+                                            int requestCode) {
         Bundle args = new Bundle();
         args.putString(ARG_KEY, key);
         args.putString(ARG_CHARSET_PREF_KEY, prefKey);
         args.putString(ARG_DEFAULT_ENCODE, defaultEncode);
+        args.putInt(ARG_REQUEST_CODE, requestCode);
 
         ChooseFileFragment fragment = new ChooseFileFragment();
         fragment.setArguments(args);
@@ -74,7 +79,7 @@ public class ChooseFileFragment extends Fragment {
 //        mEmailView = ((TextView) rootView.findViewById(R.id.your_email));
 //        mEmailView.setText(mPage.getData().getString(InputFilePage.EMAIL_DATA_KEY));
 
-        Bundle args = getArguments();
+        final Bundle args = getArguments();
         SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
         // Populate mSpinner
@@ -97,7 +102,7 @@ public class ChooseFileFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
-                startActivityForResult(intent, 42);
+                startActivityForResult(intent, args.getInt(ARG_REQUEST_CODE));
             }
         });
 
@@ -174,6 +179,21 @@ public class ChooseFileFragment extends Fragment {
             if (!menuVisible) {
                 imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.d(LOG_TAG, "onActivityResult");
+
+        if (requestCode == InputFilePage.REQUEST_CODE) {
+            Log.d(LOG_TAG, "inputFile");
+        }
+
+        if (requestCode == OutputFilePage.REQUEST_CODE) {
+            Log.d(LOG_TAG, "outputFile");
         }
     }
 }

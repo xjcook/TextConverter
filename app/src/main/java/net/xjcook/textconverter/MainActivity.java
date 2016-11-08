@@ -33,6 +33,9 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import com.tech.freak.wizardpager.ui.ReviewFragment;
 import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
+import net.xjcook.textconverter.pages.InputFilePage;
+import net.xjcook.textconverter.pages.OutputFilePage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,6 +51,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements
         PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
 
+    private static final String LOG_TAG = "MainActivity";
     public static final String PREFS_NAME = "TextConverterPrefs";
     private static final String DEFAULT_IN_ENCODING = "windows-1250";
     private static final String DEFAULT_OUT_ENCODING = "UTF-8";
@@ -273,38 +277,40 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        return;
-//        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            if (resultData != null) {
-//                inUri = resultData.getData();
-//                String inCharset = (String) inEncodingSpn.getSelectedItem();
-//
-//                try {
-//                    inFileBtn.setText(getFileNameFromUri(inUri));
-//                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
-//                } catch (IOException e) {
-//                    Log.getStackTraceString(e);
-//                }
-//            }
-//        }
-//
-//        if (requestCode == WRITE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            if (resultData != null) {
-//                outUri = resultData.getData();
-//                String inCharset = (String) inEncodingSpn.getSelectedItem();
-//                String outCharset = (String) outEncodingSpn.getSelectedItem();
-//
-//                try {
-//                    outFileBtn.setText(getFileNameFromUri(outUri));
-//                    convertText(inUri, inCharset, outUri, outCharset);
-//                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
-//                } catch (IOException e) {
-//                    Log.getStackTraceString(e);
-//                }
-//
-//                clean();
-//            }
-//        }
+        Log.d(LOG_TAG, "onActivityResult");
+        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.d(LOG_TAG, "inputFile");
+            if (resultData != null) {
+                /*inUri = resultData.getData();
+                String inCharset = (String) inEncodingSpn.getSelectedItem();
+
+                try {
+                    inFileBtn.setText(getFileNameFromUri(inUri));
+                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
+                } catch (IOException e) {
+                    Log.getStackTraceString(e);
+                }*/
+            }
+        }
+
+        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            Log.d(LOG_TAG, "outputFile");
+            if (resultData != null) {
+                /*outUri = resultData.getData();
+                String inCharset = (String) inEncodingSpn.getSelectedItem();
+                String outCharset = (String) outEncodingSpn.getSelectedItem();
+
+                try {
+                    outFileBtn.setText(getFileNameFromUri(outUri));
+                    convertText(inUri, inCharset, outUri, outCharset);
+                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
+                } catch (IOException e) {
+                    Log.getStackTraceString(e);
+                }
+
+                clean();*/
+            }
+        }
     }
 
     private String readTextFromUri(Uri uri, String charset, int maxLines) throws IOException {
