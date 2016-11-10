@@ -188,17 +188,22 @@ public class ChooseFileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (resultData != null) {
+        if (requestCode == InputFilePage.REQUEST_CODE || requestCode == OutputFilePage.REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK && resultData != null) {
                 Uri uri = resultData.getData();
-                mButton.setText(ConvertUtility.getFileNameFromUri(getActivity(), uri));
-            }
-        }
+                String filename = ConvertUtility.getFileNameFromUri(getActivity(), uri);
+                String charset = (String) mSpinner.getSelectedItem();
+                mButton.setText(filename);
 
-        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            if (resultData != null) {
-                Uri uri = resultData.getData();
-                mButton.setText(ConvertUtility.getFileNameFromUri(getActivity(), uri));
+                if (requestCode == InputFilePage.REQUEST_CODE) {
+                    mPage.getData().putParcelable(InputFilePage.URI_DATA_KEY, uri);
+                    mPage.getData().putString(InputFilePage.FILENAME_DATA_KEY, filename);
+                    mPage.getData().putString(InputFilePage.CHARSET_DATA_KEY, charset);
+                } else if (requestCode == OutputFilePage.REQUEST_CODE) {
+                    mPage.getData().putParcelable(OutputFilePage.URI_DATA_KEY, uri);
+                    mPage.getData().putString(OutputFilePage.FILENAME_DATA_KEY, filename);
+                    mPage.getData().putString(OutputFilePage.CHARSET_DATA_KEY, charset);
+                }
             }
         }
     }
