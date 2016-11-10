@@ -1,6 +1,7 @@
 package net.xjcook.textconverter.pages;
 
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.tech.freak.wizardpager.model.ModelCallbacks;
 import com.tech.freak.wizardpager.model.Page;
@@ -37,7 +38,6 @@ public class OutputFilePage extends Page {
 
     @Override
     public boolean isCompleted() {
-//        return !TextUtils.isEmpty(mData.getString(NAME_DATA_KEY));
-        return true;
+        return !TextUtils.isEmpty(mData.getString(FILENAME_DATA_KEY));
     }
 }

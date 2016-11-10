@@ -204,6 +204,8 @@ public class ChooseFileFragment extends Fragment {
                     mPage.getData().putString(OutputFilePage.FILENAME_DATA_KEY, filename);
                     mPage.getData().putString(OutputFilePage.CHARSET_DATA_KEY, charset);
                 }
+
+                mPage.notifyDataChanged();
             }
         }
     }
