@@ -33,8 +33,8 @@ public class InputFilePage extends Page {
 
     @Override
     public void getReviewItems(ArrayList<ReviewItem> dest) {
-//        dest.add(new ReviewItem("Your name", mData.getString(NAME_DATA_KEY), getKey(), -1));
-//        dest.add(new ReviewItem("Your email", mData.getString(EMAIL_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Input file", mData.getString(FILENAME_DATA_KEY), getKey(), -1));
+        dest.add(new ReviewItem("Input encoding", mData.getString(CHARSET_DATA_KEY), getKey(), -1));
     }
 
     @Override
