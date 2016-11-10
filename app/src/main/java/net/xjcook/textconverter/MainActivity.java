@@ -275,100 +275,43 @@ public class MainActivity extends AppCompatActivity implements
 //        outState.putString("previewText", (String) previewText.getText());
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        Log.d(LOG_TAG, "onActivityResult");
-        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.d(LOG_TAG, "inputFile");
-            if (resultData != null) {
-                /*inUri = resultData.getData();
-                String inCharset = (String) inEncodingSpn.getSelectedItem();
-
-                try {
-                    inFileBtn.setText(getFileNameFromUri(inUri));
-                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
-                } catch (IOException e) {
-                    Log.getStackTraceString(e);
-                }*/
-            }
-        }
-
-        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Log.d(LOG_TAG, "outputFile");
-            if (resultData != null) {
-                /*outUri = resultData.getData();
-                String inCharset = (String) inEncodingSpn.getSelectedItem();
-                String outCharset = (String) outEncodingSpn.getSelectedItem();
-
-                try {
-                    outFileBtn.setText(getFileNameFromUri(outUri));
-                    convertText(inUri, inCharset, outUri, outCharset);
-                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    Log.getStackTraceString(e);
-                }
-
-                clean();*/
-            }
-        }
-    }
-
-    private String readTextFromUri(Uri uri, String charset, int maxLines) throws IOException {
-        return null;
-//        InputStream inputStream = getContentResolver().openInputStream(uri);
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+//        Log.d(LOG_TAG, "onActivityResult");
+//        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            Log.d(LOG_TAG, "inputFile");
+//            if (resultData != null) {
+//                /*inUri = resultData.getData();
+//                String inCharset = (String) inEncodingSpn.getSelectedItem();
 //
-//        StringBuilder stringBuilder = new StringBuilder();
-//        String line;
-//        int current = 0;
-//        while ((line = reader.readLine()) != null) {
-//            if (current < maxLines) {
-//                stringBuilder.append(line);
-//                stringBuilder.append(System.getProperty("line.separator"));
-//                current++;
+//                try {
+//                    inFileBtn.setText(getFileNameFromUri(inUri));
+//                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
+//                } catch (IOException e) {
+//                    Log.getStackTraceString(e);
+//                }*/
 //            }
 //        }
 //
-//        inputStream.close();
-//        reader.close();
-//        return stringBuilder.toString();
-    }
-
-    private void convertText(Uri inUri, String inCharset, Uri outUri, String outCharset) throws IOException {
-        return;
-//        InputStream inputStream = getContentResolver().openInputStream(inUri);
-//        OutputStream outputStream = getContentResolver().openOutputStream(outUri);
+//        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+//            Log.d(LOG_TAG, "outputFile");
+//            if (resultData != null) {
+//                /*outUri = resultData.getData();
+//                String inCharset = (String) inEncodingSpn.getSelectedItem();
+//                String outCharset = (String) outEncodingSpn.getSelectedItem();
 //
-//        Reader reader = new InputStreamReader(inputStream, inCharset);
-//        Writer writer = new OutputStreamWriter(outputStream, outCharset);
+//                try {
+//                    outFileBtn.setText(getFileNameFromUri(outUri));
+//                    convertText(inUri, inCharset, outUri, outCharset);
+//                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
+//                } catch (IOException e) {
+//                    Log.getStackTraceString(e);
+//                }
 //
-//        char[] buffer = new char[BUFFER_SIZE];
-//        int read;
-//        while ((read = reader.read(buffer)) != -1) {
-//            writer.write(buffer, 0, read);
-//        }
-//
-//        writer.close();
-//        reader.close();
-//        outputStream.close();
-//        inputStream.close();
-    }
-
-    private String getFileNameFromUri(Uri uri) {
-        return null;
-//        String fileName = null;
-//        Cursor cursor = getContentResolver().query(uri, null, null, null, null, null);
-//
-//        try {
-//            if (cursor != null && cursor.moveToFirst()) {
-//                fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+//                clean();*/
 //            }
-//        } finally {
-//            cursor.close();
 //        }
-//
-//        return fileName;
-    }
+//    }
 
     private void clean() {
 //        inUri = null;

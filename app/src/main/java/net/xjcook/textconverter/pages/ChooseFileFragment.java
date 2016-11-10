@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -16,11 +17,13 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import net.xjcook.textconverter.ConvertUtility;
 import net.xjcook.textconverter.R;
 
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -37,6 +40,7 @@ public class ChooseFileFragment extends Fragment {
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
     private Page mPage;
+
     private TextView mNameView;
     private TextView mEmailView;
     private Spinner mSpinner;
@@ -183,17 +187,19 @@ public class ChooseFileFragment extends Fragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        Log.d(LOG_TAG, "onActivityResult");
-
-        if (requestCode == InputFilePage.REQUEST_CODE) {
-            Log.d(LOG_TAG, "inputFile");
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (resultData != null) {
+                Uri uri = resultData.getData();
+                mButton.setText(ConvertUtility.getFileNameFromUri(getActivity(), uri));
+            }
         }
 
-        if (requestCode == OutputFilePage.REQUEST_CODE) {
-            Log.d(LOG_TAG, "outputFile");
+        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            if (resultData != null) {
+                Uri uri = resultData.getData();
+                mButton.setText(ConvertUtility.getFileNameFromUri(getActivity(), uri));
+            }
         }
     }
 }
