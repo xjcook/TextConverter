@@ -14,9 +14,11 @@ import java.util.ArrayList;
  * A page asking for a filename and an encoding.
  */
 public class OutputFilePage extends Page {
-    public static final int REQUEST_CODE = 43;
+
+    public static final String PAGE_TITLE = "Output file";
     public static final String DEFAULT_ENCODING = "UTF-8";
 
+    public static final int REQUEST_CODE = 43;
     public static final String URI_DATA_KEY = "outUri";
     public static final String FILENAME_DATA_KEY = "outFileName";
     public static final String CHARSET_DATA_KEY = "outCharset";

@@ -53,22 +53,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String LOG_TAG = "MainActivity";
     public static final String PREFS_NAME = "TextConverterPrefs";
-    private static final String DEFAULT_IN_ENCODING = "windows-1250";
-    private static final String DEFAULT_OUT_ENCODING = "UTF-8";
-
-    private static final int BUFFER_SIZE = 8192;
-    private static final int PREVIEW_LINES = 25;
-    private static final int READ_REQUEST_CODE = 42;
-    private static final int WRITE_REQUEST_CODE = 43;
-
-    private Spinner inEncodingSpn;
-    private Spinner outEncodingSpn;
-    private Button inFileBtn;
-    private Button outFileBtn;
-    private TextView previewText;
-
-    private Uri inUri;
-    private Uri outUri;
 
     private ViewPager mPager;
     private MyPagerAdapter mPagerAdapter;
@@ -134,19 +118,20 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-                    DialogFragment dg = new DialogFragment() {
-                        @Override
-                        public Dialog onCreateDialog(Bundle savedInstanceState) {
-                            return new AlertDialog.Builder(getActivity())
-                                    .setMessage(R.string.submit_confirm_message)
-                                    .setPositiveButton(
-                                            R.string.submit_confirm_button,
-                                            null)
-                                    .setNegativeButton(android.R.string.cancel,
-                                            null).create();
-                        }
-                    };
-                    dg.show(getSupportFragmentManager(), "place_order_dialog");
+                    Bundle inBundle = mWizardModel.save().getBundle(InputFilePage.PAGE_TITLE);
+                    Bundle outBundle = mWizardModel.save().getBundle(OutputFilePage.PAGE_TITLE);
+
+                    Uri inUri = inBundle.getParcelable(InputFilePage.URI_DATA_KEY);
+                    String inCharset = inBundle.getString(InputFilePage.CHARSET_DATA_KEY);
+                    Uri outUri = outBundle.getParcelable(OutputFilePage.URI_DATA_KEY);
+                    String outCharset = outBundle.getString(OutputFilePage.CHARSET_DATA_KEY);
+
+                    try {
+                        ConvertUtility.convertText(getApplicationContext(), inUri, inCharset, outUri, outCharset);
+                        Toast.makeText(getApplicationContext(), R.string.convert_success, Toast.LENGTH_LONG).show();
+                    } catch (IOException e) {
+                        Log.getStackTraceString(e);
+                    }
                 } else {
                     if (mEditingAfterReview) {
                         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);

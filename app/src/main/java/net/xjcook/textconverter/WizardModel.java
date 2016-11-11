@@ -16,8 +16,8 @@ public class WizardModel extends AbstractWizardModel {
     @Override
     protected PageList onNewRootPageList() {
         return new PageList(
-                new InputFilePage(this, "Input file").setRequired(true),
-                new OutputFilePage(this, "Output file").setRequired(true)
+                new InputFilePage(this, InputFilePage.PAGE_TITLE).setRequired(true),
+                new OutputFilePage(this, OutputFilePage.PAGE_TITLE).setRequired(true)
         );
     }
 }

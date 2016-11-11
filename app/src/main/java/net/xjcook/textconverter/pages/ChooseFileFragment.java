@@ -77,12 +77,13 @@ public class ChooseFileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_page_file, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-        final Bundle args = getArguments();
-        final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        Bundle args = getArguments();
+        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
-        // Populate mSpinner
+        mButton = (Button) rootView.findViewById(R.id.fileBtn);
         mSpinner = (Spinner) rootView.findViewById(R.id.spinner);
 
+        // Populate charset spinner
         Map<String, Charset> charsetMap = Charset.availableCharsets();
         String[] charsetNames = charsetMap.keySet().toArray(new String[charsetMap.size()]);
 
@@ -90,9 +91,6 @@ public class ChooseFileFragment extends Fragment {
         mSpinner.setAdapter(spinAdapter);
         mSpinner.setSelection(spinAdapter.getPosition(
                 settings.getString(args.getString(ARG_CHARSET_PREF_KEY), args.getString(ARG_DEFAULT_ENCODE))));
-
-        // Set button
-        mButton = (Button) rootView.findViewById(R.id.fileBtn);
 
         return rootView;
     }

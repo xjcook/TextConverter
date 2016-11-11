@@ -15,9 +15,10 @@ import java.util.ArrayList;
  */
 public class InputFilePage extends Page {
 
-    public static final int REQUEST_CODE = 42;
+    public static final String PAGE_TITLE = "Input file";
     public static final String DEFAULT_ENCODING = "windows-1250";
 
+    public static final int REQUEST_CODE = 42;
     public static final String URI_DATA_KEY = "inUri";
     public static final String FILENAME_DATA_KEY = "inFileName";
     public static final String CHARSET_DATA_KEY = "inCharset";
