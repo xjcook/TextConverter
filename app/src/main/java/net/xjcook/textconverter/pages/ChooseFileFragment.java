@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -23,7 +24,6 @@ import net.xjcook.textconverter.R;
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -77,14 +77,8 @@ public class ChooseFileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_page_file, container, false);
         ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-//        mNameView = ((TextView) rootView.findViewById(R.id.your_name));
-//        mNameView.setText(mPage.getData().getString(InputFilePage.NAME_DATA_KEY));
-//
-//        mEmailView = ((TextView) rootView.findViewById(R.id.your_email));
-//        mEmailView.setText(mPage.getData().getString(InputFilePage.EMAIL_DATA_KEY));
-
         final Bundle args = getArguments();
-        SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+        final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
         // Populate mSpinner
         mSpinner = (Spinner) rootView.findViewById(R.id.spinner);
@@ -99,16 +93,6 @@ public class ChooseFileFragment extends Fragment {
 
         // Set button
         mButton = (Button) rootView.findViewById(R.id.fileBtn);
-
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                intent.addCategory(Intent.CATEGORY_OPENABLE);
-                intent.setType("*/*");
-                startActivityForResult(intent, args.getInt(ARG_REQUEST_CODE));
-            }
-        });
 
         return rootView;
     }
@@ -134,41 +118,51 @@ public class ChooseFileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        mNameView.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-//                                          int i2) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                mPage.getData().putString(InputFilePage.NAME_DATA_KEY,
-//                        (editable != null) ? editable.toString() : null);
-//                mPage.notifyDataChanged();
-//            }
-//        });
-//
-//        mEmailView.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-//                                          int i2) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//                mPage.getData().putString(InputFilePage.EMAIL_DATA_KEY,
-//                        (editable != null) ? editable.toString() : null);
-//                mPage.notifyDataChanged();
-//            }
-//        });
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+                int requestCode = getArguments().getInt(ARG_REQUEST_CODE);
+
+                if (requestCode == InputFilePage.REQUEST_CODE) {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("*/*");
+                    startActivityForResult(intent, requestCode);
+
+                } else if (requestCode == OutputFilePage.REQUEST_CODE) {
+                    String filename = settings.getString(InputFilePage.FILENAME_DATA_KEY, null);
+                    if (filename != null) {
+                        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.setType("*/*");
+                        intent.putExtra(Intent.EXTRA_TITLE, "enc_" + filename);
+                        startActivityForResult(intent, requestCode);
+                    }
+                }
+            }
+        });
+
+        mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Bundle args = getArguments();
+                String charset = (String) mSpinner.getSelectedItem();
+
+                mPage.getData().putString(args.getString(ARG_CHARSET_PREF_KEY), charset);
+                mPage.notifyDataChanged();
+
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(PREFS_NAME, 0).edit();
+                editor.putString(args.getString(ARG_CHARSET_PREF_KEY), charset);
+                editor.commit();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
@@ -190,23 +184,26 @@ public class ChooseFileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == InputFilePage.REQUEST_CODE || requestCode == OutputFilePage.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
+                SharedPreferences.Editor editor = getActivity().getSharedPreferences(PREFS_NAME, 0).edit();
                 Uri uri = resultData.getData();
                 String filename = ConvertUtility.getFileNameFromUri(getActivity(), uri);
-                String charset = (String) mSpinner.getSelectedItem();
                 mButton.setText(filename);
 
                 if (requestCode == InputFilePage.REQUEST_CODE) {
                     mPage.getData().putParcelable(InputFilePage.URI_DATA_KEY, uri);
                     mPage.getData().putString(InputFilePage.FILENAME_DATA_KEY, filename);
-                    mPage.getData().putString(InputFilePage.CHARSET_DATA_KEY, charset);
+                    editor.putString(InputFilePage.FILENAME_DATA_KEY, filename);
+
                 } else if (requestCode == OutputFilePage.REQUEST_CODE) {
                     mPage.getData().putParcelable(OutputFilePage.URI_DATA_KEY, uri);
                     mPage.getData().putString(OutputFilePage.FILENAME_DATA_KEY, filename);
-                    mPage.getData().putString(OutputFilePage.CHARSET_DATA_KEY, charset);
+                    editor.putString(OutputFilePage.FILENAME_DATA_KEY, filename);
                 }
 
                 mPage.notifyDataChanged();
+                editor.commit();
             }
         }
     }
+
 }
