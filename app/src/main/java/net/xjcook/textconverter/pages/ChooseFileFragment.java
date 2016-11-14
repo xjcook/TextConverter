@@ -1,7 +1,6 @@
 package net.xjcook.textconverter.pages;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,18 +10,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import net.xjcook.textconverter.ConvertUtility;
-import net.xjcook.textconverter.R;
-
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
+
+import net.xjcook.textconverter.ConvertUtility;
+import net.xjcook.textconverter.R;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
