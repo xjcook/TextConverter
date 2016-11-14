@@ -152,52 +152,6 @@ public class MainActivity extends AppCompatActivity implements
         onPageTreeChanged();
         updateBottomBar();
 
-//        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-//        previewText = (TextView) findViewById(R.id.previewText);
-//
-//        // Populate spinners
-//        inEncodingSpn = (Spinner) findViewById(R.id.inEncodingSpn);
-//        outEncodingSpn = (Spinner) findViewById(R.id.outEncodingSpn);
-//
-//        Map<String, Charset> charsetMap = Charset.availableCharsets();
-//        String[] charsetNames = charsetMap.keySet().toArray(new String[charsetMap.size()]);
-//
-//        ArrayAdapter spinAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, charsetNames);
-//        inEncodingSpn.setAdapter(spinAdapter);
-//        outEncodingSpn.setAdapter(spinAdapter);
-//
-//        inEncodingSpn.setSelection(
-//                spinAdapter.getPosition(settings.getString("inCharset", DEFAULT_IN_ENCODING)));
-//        outEncodingSpn.setSelection(
-//                spinAdapter.getPosition(settings.getString("outCharset", DEFAULT_OUT_ENCODING)));
-//
-//        // Set buttons
-//        inFileBtn = (Button) findViewById(R.id.inFileBtn);
-//        outFileBtn = (Button) findViewById(R.id.outFileBtn);
-//
-//        inFileBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-//                intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                intent.setType("*/*");
-//                startActivityForResult(intent, READ_REQUEST_CODE);
-//            }
-//        });
-//
-//        outFileBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (inUri != null) {
-//                    Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-//                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-//                    intent.setType("*/*");
-//                    intent.putExtra(Intent.EXTRA_TITLE, "enc_" + inFileBtn.getText());
-//                    startActivityForResult(intent, WRITE_REQUEST_CODE);
-//                }
-//            }
-//        });
-//
 //        // Handle screen rotation
 //        if (savedInstanceState != null) {
 //            inUri = savedInstanceState.getParcelable("inUri");
@@ -259,44 +213,6 @@ public class MainActivity extends AppCompatActivity implements
 //        outState.putString("outFileBtn", (String) outFileBtn.getText());
 //        outState.putString("previewText", (String) previewText.getText());
     }
-
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-//        Log.d(LOG_TAG, "onActivityResult");
-//        if (requestCode == InputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            Log.d(LOG_TAG, "inputFile");
-//            if (resultData != null) {
-//                /*inUri = resultData.getData();
-//                String inCharset = (String) inEncodingSpn.getSelectedItem();
-//
-//                try {
-//                    inFileBtn.setText(getFileNameFromUri(inUri));
-//                    previewText.setText(readTextFromUri(inUri, inCharset, PREVIEW_LINES));
-//                } catch (IOException e) {
-//                    Log.getStackTraceString(e);
-//                }*/
-//            }
-//        }
-//
-//        if (requestCode == OutputFilePage.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-//            Log.d(LOG_TAG, "outputFile");
-//            if (resultData != null) {
-//                /*outUri = resultData.getData();
-//                String inCharset = (String) inEncodingSpn.getSelectedItem();
-//                String outCharset = (String) outEncodingSpn.getSelectedItem();
-//
-//                try {
-//                    outFileBtn.setText(getFileNameFromUri(outUri));
-//                    convertText(inUri, inCharset, outUri, outCharset);
-//                    Toast.makeText(this, R.string.convert_success, Toast.LENGTH_LONG).show();
-//                } catch (IOException e) {
-//                    Log.getStackTraceString(e);
-//                }
-//
-//                clean();*/
-//            }
-//        }
-//    }
 
     private void clean() {
 //        inUri = null;

@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <TextView style="@style/WizardFormLabel"
-                android:text="@string/label_your_name" />
+                android:text="@string/label_filename" />
 
             <Button android:id="@+id/fileBtn"
                 android:text="@string/choose_file"
@@ -38,11 +38,21 @@
                 android:layout_marginBottom="16dp"/>
 
             <TextView style="@style/WizardFormLabel"
-                android:text="@string/label_your_email" />
+                android:text="@string/label_encoding" />
 
             <Spinner android:id="@+id/spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <TextView style="@style/WizardFormLabel"
+                android:id="@+id/previewLabel"
+                android:text="@string/label_preview"
+                android:visibility="gone" />
+
+            <TextView android:id="@+id/previewText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
         </LinearLayout>
     </ScrollView>

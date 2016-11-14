@@ -24,6 +24,7 @@ import net.xjcook.textconverter.R;
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -40,11 +41,12 @@ public class ChooseFileFragment extends Fragment {
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
     private Page mPage;
+    private Uri mUri;
 
-    private TextView mNameView;
-    private TextView mEmailView;
     private Spinner mSpinner;
     private Button mButton;
+    private TextView mPreviewLabel;
+    private TextView mPreviewView;
 
     public static ChooseFileFragment create(String key, String prefKey, String defaultEncode,
                                             int requestCode) {
@@ -82,6 +84,8 @@ public class ChooseFileFragment extends Fragment {
 
         mButton = (Button) rootView.findViewById(R.id.fileBtn);
         mSpinner = (Spinner) rootView.findViewById(R.id.spinner);
+        mPreviewLabel = (TextView) rootView.findViewById(R.id.previewLabel);
+        mPreviewView = (TextView) rootView.findViewById(R.id.previewText);
 
         // Populate charset spinner
         Map<String, Charset> charsetMap = Charset.availableCharsets();
@@ -154,6 +158,14 @@ public class ChooseFileFragment extends Fragment {
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(PREFS_NAME, 0).edit();
                 editor.putString(args.getString(ARG_CHARSET_PREF_KEY), charset);
                 editor.commit();
+
+                if (mUri != null) {
+                    try {
+                        mPreviewView.setText(ConvertUtility.readTextFromUri(getActivity(), mUri, charset));
+                    } catch (IOException e) {
+                        Log.getStackTraceString(e);
+                    }
+                }
             }
 
             @Override
@@ -164,36 +176,31 @@ public class ChooseFileFragment extends Fragment {
     }
 
     @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-
-        // In a future update to the support library, this should override setUserVisibleHint
-        // instead of setMenuVisibility.
-        if (mNameView != null) {
-            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            if (!menuVisible) {
-                imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
-            }
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
         if (requestCode == InputFilePage.REQUEST_CODE || requestCode == OutputFilePage.REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK && resultData != null) {
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences(PREFS_NAME, 0).edit();
-                Uri uri = resultData.getData();
-                String filename = ConvertUtility.getFileNameFromUri(getActivity(), uri);
+                mUri = resultData.getData();
+                String filename = ConvertUtility.getFileNameFromUri(getActivity(), mUri);
+                String charset = (String) mSpinner.getSelectedItem();
                 mButton.setText(filename);
 
                 if (requestCode == InputFilePage.REQUEST_CODE) {
-                    mPage.getData().putParcelable(InputFilePage.URI_DATA_KEY, uri);
+                    mPage.getData().putParcelable(InputFilePage.URI_DATA_KEY, mUri);
                     mPage.getData().putString(InputFilePage.FILENAME_DATA_KEY, filename);
                     editor.putString(InputFilePage.FILENAME_DATA_KEY, filename);
 
+                    // Show preview
+                    try {
+                        mPreviewLabel.setVisibility(TextView.VISIBLE);
+                        mPreviewView.setText(ConvertUtility.readTextFromUri(getActivity(), mUri, charset));
+                        mPreviewView.setVisibility(TextView.VISIBLE);
+                    } catch (IOException e) {
+                        Log.getStackTraceString(e);
+                    }
+
                 } else if (requestCode == OutputFilePage.REQUEST_CODE) {
-                    mPage.getData().putParcelable(OutputFilePage.URI_DATA_KEY, uri);
+                    mPage.getData().putParcelable(OutputFilePage.URI_DATA_KEY, mUri);
                     mPage.getData().putString(OutputFilePage.FILENAME_DATA_KEY, filename);
                     editor.putString(OutputFilePage.FILENAME_DATA_KEY, filename);
                 }
