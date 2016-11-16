@@ -95,6 +95,10 @@ public class ChooseFileFragment extends Fragment {
         mSpinner.setSelection(spinAdapter.getPosition(
                 settings.getString(args.getString(ARG_CHARSET_PREF_KEY), args.getString(ARG_DEFAULT_ENCODE))));
 
+        if (args.getInt(ARG_REQUEST_CODE) == OutputFilePage.REQUEST_CODE) {
+            mButton.setText(getResources().getString(R.string.save_as));
+        }
+
         return rootView;
     }
 

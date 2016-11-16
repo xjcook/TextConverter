@@ -1,43 +1,25 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/WizardPageContainer"
     android:orientation="vertical">
 
-    <TextView style="@style/WizardPageTitle" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
-    <ScrollView android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout android:layout_width="match_parent"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center" />
 
-            <TextView style="@style/WizardFormLabel"
-                android:text="@string/label_filename" />
+        <TextView android:id="@+id/infoText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="25sp"
+            android:text="@string/convert_progress" />
 
-            <Button android:id="@+id/fileBtn"
-                android:text="@string/choose_file"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"/>
+    </LinearLayout>
 
-            <TextView style="@style/WizardFormLabel"
-                android:text="@string/label_encoding" />
-
-            <Spinner android:id="@+id/spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView style="@style/WizardFormLabel"
-                android:id="@+id/previewLabel"
-                android:text="@string/label_preview"
-                android:visibility="gone" />
-
-            <TextView android:id="@+id/previewText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone" />
-
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+</FrameLayout>

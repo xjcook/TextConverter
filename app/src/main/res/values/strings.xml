@@ -5,11 +5,14 @@
     <string name="save_as">Save As...</string>
     <string name="action_settings">Settings</string>
 
+    <string name="convert_progress">Converting file...</string>
     <string name="convert_success">File was successfully converted</string>
+    <string name="convert_failed">Conversion failed</string>
 
     <string name="next">Next</string>
     <string name="prev">Previous</string>
     <string name="finish">Convert</string>
+    <string name="new_file">New file</string>
 
     <string name="label_filename">Name</string>
     <string name="label_encoding">Encoding</string>

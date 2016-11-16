@@ -1,6 +1,5 @@
 package net.xjcook.textconverter;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,6 @@ import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.ModelCallbacks;
@@ -21,10 +19,8 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import com.tech.freak.wizardpager.ui.ReviewFragment;
 import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
-import net.xjcook.textconverter.pages.InputFilePage;
-import net.xjcook.textconverter.pages.OutputFilePage;
+import net.xjcook.textconverter.pages.ConvertFragment;
 
-import java.io.IOException;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
@@ -97,20 +93,8 @@ public class MainActivity extends AppCompatActivity implements
             @Override
             public void onClick(View view) {
                 if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-                    Bundle inBundle = mWizardModel.save().getBundle(InputFilePage.PAGE_TITLE);
-                    Bundle outBundle = mWizardModel.save().getBundle(OutputFilePage.PAGE_TITLE);
-
-                    Uri inUri = inBundle.getParcelable(InputFilePage.URI_DATA_KEY);
-                    String inCharset = inBundle.getString(InputFilePage.CHARSET_DATA_KEY);
-                    Uri outUri = outBundle.getParcelable(OutputFilePage.URI_DATA_KEY);
-                    String outCharset = outBundle.getString(OutputFilePage.CHARSET_DATA_KEY);
-
-                    try {
-                        ConvertUtility.convertText(getApplicationContext(), inUri, inCharset, outUri, outCharset);
-                        Toast.makeText(getApplicationContext(), R.string.convert_success, Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Log.getStackTraceString(e);
-                    }
+                    // Switch to first page
+                    mPager.setCurrentItem(0);
                 } else {
                     if (mEditingAfterReview) {
                         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -143,13 +127,23 @@ public class MainActivity extends AppCompatActivity implements
 
     private void updateBottomBar() {
         int position = mPager.getCurrentItem();
-        if (position == mCurrentPageSequence.size()) {
+
+        mPrevButton
+                .setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+
+        if (position == mCurrentPageSequence.size() - 1) {
             mNextButton.setText(R.string.finish);
+            mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+            mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+            // TODO Set background by enable state
             mNextButton.setBackgroundResource(R.drawable.finish_background);
+        } else if (position == mCurrentPageSequence.size()) {
+            mPrevButton.setVisibility(View.INVISIBLE);
+            mNextButton.setText(R.string.new_file);
+            mNextButton.setBackgroundResource(R.drawable.newfile_background);
             mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
         } else {
-            mNextButton.setText(mEditingAfterReview ? R.string.review
-                    : R.string.next);
+            mNextButton.setText(R.string.next);
             mNextButton
                     .setBackgroundResource(R.drawable.selectable_item_background);
             TypedValue v = new TypedValue();
@@ -158,21 +152,6 @@ public class MainActivity extends AppCompatActivity implements
             mNextButton.setTextAppearance(this, v.resourceId);
             mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
         }
-
-        mPrevButton
-                .setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-//        // Save preferences
-//        SharedPreferences.Editor editor = getSharedPreferences(PREFS_NAME, 0).edit();
-//        editor.putString("inCharset", (String) inEncodingSpn.getSelectedItem());
-//        editor.putString("outCharset", (String) outEncodingSpn.getSelectedItem());
-//
-//        editor.commit();
     }
 
     @Override
@@ -191,14 +170,6 @@ public class MainActivity extends AppCompatActivity implements
 //        outState.putString("inFileBtn", (String) inFileBtn.getText());
 //        outState.putString("outFileBtn", (String) outFileBtn.getText());
 //        outState.putString("previewText", (String) previewText.getText());
-    }
-
-    private void clean() {
-//        inUri = null;
-//        outUri = null;
-//        inFileBtn.setText(R.string.choose_file);
-//        outFileBtn.setText(R.string.save_as);
-//        previewText.setText(R.string.preview);
     }
 
     @Override
@@ -275,7 +246,9 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public Fragment getItem(int i) {
             if (i >= mCurrentPageSequence.size()) {
-                return new ReviewFragment();
+                ConvertFragment fragment = new ConvertFragment();
+                fragment.setArguments(mWizardModel.save());
+                return fragment;
             }
 
             return mCurrentPageSequence.get(i).createFragment();
