@@ -99,6 +99,18 @@ public class ChooseFileFragment extends Fragment {
             mButton.setText(getResources().getString(R.string.save_as));
         }
 
+        // Handle screen rotation
+        if (savedInstanceState != null) {
+            mUri = savedInstanceState.getParcelable("uri");
+            mButton.setText(savedInstanceState.getString("fileBtn"));
+
+            if (args.getInt(ARG_REQUEST_CODE) == InputFilePage.REQUEST_CODE) {
+                mPreviewLabel.setVisibility(TextView.VISIBLE);
+                mPreviewView.setText(savedInstanceState.getString("previewText"));
+                mPreviewView.setVisibility(TextView.VISIBLE);
+            }
+        }
+
         return rootView;
     }
 
@@ -117,6 +129,15 @@ public class ChooseFileFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putParcelable("uri", mUri);
+        outState.putString("fileBtn", (String) mButton.getText());
+        outState.putString("previewText", (String) mPreviewView.getText());
     }
 
     @Override

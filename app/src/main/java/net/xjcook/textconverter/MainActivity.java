@@ -114,15 +114,6 @@ public class MainActivity extends AppCompatActivity implements
 
         onPageTreeChanged();
         updateBottomBar();
-
-//        // Handle screen rotation
-//        if (savedInstanceState != null) {
-//            inUri = savedInstanceState.getParcelable("inUri");
-//            outUri = savedInstanceState.getParcelable("outUri");
-//            inFileBtn.setText(savedInstanceState.getString("inFileBtn"));
-//            outFileBtn.setText(savedInstanceState.getString("outFileBtn"));
-//            previewText.setText(savedInstanceState.getString("previewText"));
-//        }
     }
 
     private void updateBottomBar() {
@@ -134,8 +125,8 @@ public class MainActivity extends AppCompatActivity implements
         if (position == mCurrentPageSequence.size() - 1) {
             mNextButton.setText(R.string.finish);
             mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
-            mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
             // TODO Set background by enable state
+            //mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
             mNextButton.setBackgroundResource(R.drawable.finish_background);
         } else if (position == mCurrentPageSequence.size()) {
             mPrevButton.setVisibility(View.INVISIBLE);
@@ -164,12 +155,6 @@ public class MainActivity extends AppCompatActivity implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("model", mWizardModel.save());
-
-//        outState.putParcelable("inUri", inUri);
-//        outState.putParcelable("outUri", outUri);
-//        outState.putString("inFileBtn", (String) inFileBtn.getText());
-//        outState.putString("outFileBtn", (String) outFileBtn.getText());
-//        outState.putString("previewText", (String) previewText.getText());
     }
 
     @Override
